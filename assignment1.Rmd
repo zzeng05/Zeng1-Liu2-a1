@@ -1,5 +1,6 @@
 ---
-title: "assignment1"
+title: "Assignment1"
+author: "Zupeng Zeng"
 output: pdf_document
 date: "2025-09-03"
 ---
