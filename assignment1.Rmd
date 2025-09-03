@@ -22,13 +22,18 @@ Download both the Angell.dta (Stata data format) dataset and the Angell.txt data
 
 2)  Read in the .dta version and store in an object called `angell_stata`.
 
-```{r setup, include=FALSE}
+```{r}
 library(haven)
 angell_stata <- read_dta("/Users/zpzzz/Desktop/SURV727/Zeng1-Liu2-a1/angell.dta")
-
+summary(angell_stata)
 ```
 
 3)  Read in the .txt version and store it in an object called `angell_txt`.
+
+```{r}
+angell_txt <- read.table("/Users/zpzzz/Desktop/SURV727/Zeng1-Liu2-a1/angell.txt")
+summary(angell_txt)
+```
 
 4)  What are the differences between `angell_stata` and `angell_txt`? Are there differences in the classes of the individual columns?
 
