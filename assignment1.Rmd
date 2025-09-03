@@ -4,12 +4,6 @@ output: pdf_document
 date: "2025-09-03"
 ---
 
-```{r setup, include=FALSE}
-library(haven)
-angell_stata <- read_dta("/Users/zpzzz/Desktop/SURV727/Zeng1-Liu2-a1/angell.dta")
-
-```
-
 This assignment is to be submitted individually. Turn in this assignment as an HTML or PDF file to ELMS. Make sure to include the R Markdown or Quarto file that was used to generate it. You should include the questions in your solutions. You may use the qmd file of the assignment provided to insert your answers.
 
 ## Git and GitHub
@@ -27,6 +21,12 @@ This assignment is to be submitted individually. Turn in this assignment as an H
 Download both the Angell.dta (Stata data format) dataset and the Angell.txt dataset from this website: <https://stats.idre.ucla.edu/stata/examples/ara/applied-regression-analysis-by-fox-data-files/>
 
 2)  Read in the .dta version and store in an object called `angell_stata`.
+
+```{r setup, include=FALSE}
+library(haven)
+angell_stata <- read_dta("/Users/zpzzz/Desktop/SURV727/Zeng1-Liu2-a1/angell.dta")
+
+```
 
 3)  Read in the .txt version and store it in an object called `angell_txt`.
 
