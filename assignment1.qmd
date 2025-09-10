@@ -1,5 +1,6 @@
 ---
-title: "Assignment 1 Zupeng Zeng"
+title: "Assignment 1"
+author: "Zupeng Zeng"
 subtitle: "Due at 11:59pm on September 16."
 format: pdf 
 editor: visual
