@@ -39,29 +39,78 @@ summary(angell_txt)
 4\) What are the differences between `angell_stata` and `angell_txt`? Are there differences in the classes of the individual columns?
 
 ```{r}
-# Compare names and classes
 names(angell_stata)
 names(angell_txt)
 
 sapply(angell_stata, class)
 sapply(angell_txt, class)
+# 1) Quick peek to confirm columns in the text file
+head(angell_txt, 3)
+
+# 2) Region levels from the Stata file (after converting labels)
+levels(haven::as_factor(angell_stata$region))
 ```
 
 5\) Make any updates necessary so that `angell_txt` is the same as `angell_stata`.
 
+```{r}
+## Rename columns
+names(angell_txt) <- names(angell_stata)
+
+## Align classes
+angell_txt$city   <- as.character(angell_txt$city)
+angell_txt$morint <- as.numeric(angell_txt$morint)
+angell_txt$geomob <- as.numeric(angell_txt$geomob)
+angell_txt$region <- factor(
+  angell_txt$region,
+  levels = levels(haven::as_factor(angell_stata$region))  # "E","MW","W","S"
+)
+
+## Final check
+print(names(angell_stata))
+print(names(angell_txt))
+print(head(angell_stata))
+print(head(angell_txt))
+print(all.equal(as.data.frame(angell_txt),
+                as.data.frame(angell_stata),
+                check.attributes = FALSE))
+```
+
 6\) Describe the Ethnic Heterogeneity variable. Use descriptive statistics such as mean, median, standard deviation, etc. How does it differ by region?
+
+```{r}
+library(psych)
+
+psych::describe(angell_stata$ethhet)
+psych::describeBy(angell_stata$ethhet, angell_stata$region, mat = TRUE)
+```
 
 ## Describing Data
 
 R comes also with many built-in datasets. The "MASS" package, for example, comes with the "Boston" dataset.
 
 7\) Install the "MASS" package, load the package. Then, load the Boston dataset.
+```{r}
+if (!requireNamespace("MASS", quietly = TRUE)) install.packages("MASS") # for smooth rendering
+library(MASS)
+data("Boston")
+```
 
 8\) What is the type of the Boston object?
+```{r}
+typeof(Boston)
+```
 
 9\) What is the class of the Boston object?
+```{r}
+class(Boston)
+```
 
 10\) How many of the suburbs in the Boston data set bound the Charles river?
+```{r}
+head(Boston)
+sum(Boston$chas == 1)
+```
 
 11\) Do any of the suburbs of Boston appear to have particularly high crime rates? Tax rates? Pupil-teacher ratios? Comment on the range of each variable.
 
