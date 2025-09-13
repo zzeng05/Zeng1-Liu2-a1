@@ -120,7 +120,11 @@ head(Boston[order(-Boston$ptratio), ])
 summary(Boston[c("crim","tax","ptratio")])
 ```
 
-- 
+From re-ranked tables and summary statistics we can see that:
+
+- Crime is right-skewed with a median about 0.257 vs. a max of 88.976, min of 0.006. A small number of tracts have very high crime relative to the bulk.
+- Tax also has a long upper tail:many of the highest-tax tracts sit at 666/711, which stand far above the median 330.
+- Pupil–teacher ratio varies in a narrower region of 12.6 to 22.0. There are higher values, but nothing like the extreme outliers seen for crim and tax.
 
 12\) Describe the distribution of pupil-teacher ratio among the towns in this data set that have a per capita crime rate larger than 1. How does it differ from towns that have a per capita crime rate smaller than 1?
 
@@ -141,6 +145,9 @@ ggplot(df, aes(x = ptratio, color = group)) +
 
 by(df$ptratio, df$group, summary)
 ```
+
+- From the summary and the density plot we can see that towns with crim > 1 have higher and tightly concentrated pupil–teacher ratios of median 20.20, mean 19.29, range from 14.70 to 21.20. The density is sharply peaked near 20.2 with a left tail.
+- By contrast, towns with crim < 1 show lower and more dispersed ratios of median 18.30, mean 18.02, ranging from 12.60 to 22.00. Its density is flatter and more symmetric.
 
 ## Writing Functions
 

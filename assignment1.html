@@ -393,8 +393,11 @@ X14  11.6  0.639974099 -1.1117407 1.699951</code></pre>
  Max.   :88.97620   Max.   :711.0   Max.   :22.00  </code></pre>
 </div>
 </div>
+<p>From re-ranked tables and summary statistics we can see that:</p>
 <ul>
-<li></li>
+<li>Crime is right-skewed with a median about 0.257 vs.&nbsp;a max of 88.976, min of 0.006. A small number of tracts have very high crime relative to the bulk.</li>
+<li>Tax also has a long upper tail:many of the highest-tax tracts sit at 666/711, which stand far above the median 330.</li>
+<li>Pupil–teacher ratio varies in a narrower region of 12.6 to 22.0. There are higher values, but nothing like the extreme outliers seen for crim and tax.</li>
 </ul>
 <p>12) Describe the distribution of pupil-teacher ratio among the towns in this data set that have a per capita crime rate larger than 1. How does it differ from towns that have a per capita crime rate smaller than 1?</p>
 <div class="cell">
@@ -457,6 +460,10 @@ df$group: crim &gt; 1
   14.70   20.20   20.20   19.29   20.20   21.20 </code></pre>
 </div>
 </div>
+<ul>
+<li>From the summary and the density plot we can see that towns with crim &gt; 1 have higher and tightly concentrated pupil–teacher ratios of median 20.20, mean 19.29, range from 14.70 to 21.20. The density is sharply peaked near 20.2 with a left tail.</li>
+<li>By contrast, towns with crim &lt; 1 show lower and more dispersed ratios of median 18.30, mean 18.02, ranging from 12.60 to 22.00. Its density is flatter and more symmetric.</li>
+</ul>
 </section>
 <section id="writing-functions" class="level2">
 <h2 class="anchored" data-anchor-id="writing-functions">Writing Functions</h2>
