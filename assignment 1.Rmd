@@ -1,0 +1,265 @@
+---
+title: "Untitled"
+author: "Troy Liu"
+date: "09/16/2025"
+output: html_document
+---
+
+# Git and GitHub
+
+#### 1) Provide the link to the GitHub repo that you used to practice git from Week 1. It should have:
+
+##### • Your name on the README file.
+
+##### • At least one commit with your name, with a description of what you did in that commit.
+
+-   <https://github.com/zzeng05/Zeng1-Liu2-a1.git>
+
+# Reading Data
+
+#### 2) Read in the .dta version and store in an object called angell_stata.
+
+```{r}
+library(haven)
+angell_stata <- read_dta("/Users/troyliu/Documents/Education/University of Michigan/Master's Degree/SurvMeth 727/assignment/assignment 1/angell.dta")
+angell_stata
+```
+
+#### 3) Read in the .txt version and store it in an object called angell_txt.
+
+```{r}
+angell_txt <- read.table("/Users/troyliu/Documents/Education/University of Michigan/Master's Degree/SurvMeth 727/assignment/assignment 1/angell.txt")
+angell_txt
+```
+
+#### 4) What are the differences between angell_stata and angell_txt? Are there differences in the classes of the individual columns?
+
+```{r}
+class(angell_stata)
+class(angell_txt)
+summary(angell_stata)
+summary(angell_txt)
+lapply(angell_txt, class)
+lapply(angell_stata, class)
+```
+
+-   At the overall data frame level, angell_txt is simply a base R data frame while angell_stata is stored as a tibble (tidyverse version of the data frame).
+-   At variable level, column names are different between angell_stata and angell_txt.
+-   At individual column level, There are no differences in the data type of individual columns between them.
+
+#### 5) Make any updates necessary so that angell_txt is the same as angell_stata.
+
+```{r}
+# rename angell_txt colnames
+colnames(angell_txt) <- colnames(angell_stata)
+# re-run to check txt result
+summary(angell_txt)
+summary(angell_stata)
+```
+
+#### 6) Describe the Ethnic Heterogeneity variable. Use descriptive statistics such as mean, median, standard deviation, etc. How does it differ by region?
+
+```{r}
+# Descriptive statistics of ethhet
+library(tidyverse)
+angell_stata %>% 
+  summarise(mean_ethhet = mean(ethhet),
+            median_ethhet = median(ethhet),
+            sd_ethhet = sd(ethhet))
+
+# Descriptive statistics of ethhet by region
+angell_stata %>% 
+  group_by(region) %>% 
+  summarise(mean_ethhet = mean(ethhet),
+            median_ethhet = median(ethhet),
+            sd_ethhet = sd(ethhet))
+```
+
+-   The average non-white and foreign-born white residents among cities is about 31.37%, with a median of 23.7% and a standard deviation of 20.41%.
+-   The South region has the most ethnic heterogeneity with the highest mean and spread (through standard deviation); The West has the least ethnic heterogeneity. The Mid-West and East have the moderate level of diversity while the East is slightly higher than the Mid-West.
+
+# Describing Data
+
+#### 7) Install the “MASS” package, load the package. Then, load the Boston dataset.
+
+```{r}
+library(MASS)
+help(package = "MASS")
+data("Boston")
+summary(Boston)
+head(Boston)
+```
+
+#### 8) What is the type of the Boston object?
+
+```{r}
+typeof(Boston)
+```
+
+-   It's a list.
+
+#### 9) What is the class of the Boston object?
+
+```{r}
+class(Boston)
+```
+
+-   It's a data frame.
+
+#### 10) How many of the suburbs in the Boston data set bound the Charles river?
+
+```{r}
+length(which(Boston$chas == 1))
+```
+
+-   There are 35 suburbs bound the Charles river.
+
+#### 11) Do any of the suburbs of Boston appear to have particularly high crime rates? Tax rates? Pupil-teacher ratios? Comment on the range of each variable.
+
+```{r}
+# highest values of each variable
+BOS <- Boston %>% rownames_to_column("suburb_name")
+## crime rates
+BOS %>% 
+  slice_max(crim)
+##tax rates
+BOS %>% 
+  slice_max(tax)
+##pupil-teacher ratios
+BOS %>% 
+  slice_max(ptratio)
+
+# range of each variable
+range(Boston$crim)
+range(Boston$tax)
+range(Boston$ptratio)
+```
+
+-   The #381 has the highest crime rates; #489-493 (5 in total) have the highest tax rates; #355 and #356 has the highest pupil-teacher ratios.
+-   The range of crime rates is between .0063 and 88.98; Range of tax rates is between 187 and 711; The range of pupil-teacher ratios is between 12.6 and 22.
+
+#### 12) Describe the distribution of pupil-teacher ratio among the towns in this data set that have a per capita crime rate larger than 1. How does it differ from towns that have a per capita crime rate smaller than 1?
+
+```{r}
+# categorizing >1 | <1
+h_crim <- subset(Boston, crim > 1)
+l_crim <- subset(Boston, crim < 1)
+# summary statistics
+summary_crim <- list(
+  "Crime Rate > 1" = summary(h_crim$ptratio),
+  "Crime Rate < 1" = summary(l_crim$ptratio)
+)
+
+summary_crim
+
+boxplot(h_crim$ptratio, l_crim$ptratio,
+        names = c("Crime Rate > 1", "Crime Rate < 1"),
+        main = "Pupil-Teacher Ratio by Crime Rate Group",
+        ylab = "Pupil-Teacher Ratio",
+        col = c("red", "green"))
+```
+
+-   Towns with crime rate greater than 1 tend to have higher pupil-teacher ratios compared to towns with a crime rate less than 1; High-crime towns show both higher mean and median ratios, with more concentrated distribution than low-crime towns.
+
+# Writing Functions
+
+#### 13) Write a function that calculates 95% confidence intervals for a point estimate. The function should be called my_CI. When called with my_CI(2, 0.2), the function should print out “The 95% CI upper bound of point estimate 2 with standard error 0.2 is 2.392. The lower bound is 1.608.”
+
+##### Note: The function should take a point estimate and its standard error as arguments. You may use the formula for 95% CI: point estimate +/- 1.96\*standard error. Hint: Pasting text in R can be done with: paste() and paste0()
+
+```{r}
+my_CI <- function(pe, se) {
+  
+  z <- 1.96  
+  up <- pe + z * se
+  lo <- pe - z * se
+  
+  cat(paste0("The 95% CI upper bound of point estimate ", pe, 
+      " with standard error ", se, 
+      " is ", round(up, 3), 
+      ". The lower bound is ", round(lo, 3), ".\n"))
+  
+}
+
+# testing
+my_CI(2, .2)
+```
+
+#### 14) Create a new function called my_CI2 that does that same thing as the my_CI function but outputs a vector of length 2 with the lower and upper bound of the confidence interval instead of printing out the text. Use this to find the 95% confidence interval for a point estimate of 0 and standard error 0.4.
+
+```{r}
+my_CI2 <- function(pe, se) {
+  
+  z <- 1.96  
+  up <- pe + z * se
+  lo <- pe - z * se
+  
+  return(c(lo, up))
+  
+}
+
+# testing
+my_CI2(0, .4)
+```
+
+#### 15) Update the my_CI2 function to take any confidence level instead of only 95%. Call the new function my_CI3. You should add an argument to your function for confidence level. Hint: Use the qnorm function to find the appropriate z-value. For example, for a 95% confidence interval, using qnorm(0.975) gives approximately 1.96.
+
+```{r}
+my_CI3 <- function(pe, se, cl = .95) {
+
+  z <- qnorm(1 - (1 - cl)/2)
+  up <- pe + z * se
+  lo <- pe - z * se
+  
+  return(c(lo, up))
+  
+}
+
+# testing
+my_CI3(0, .4, cl = .95)
+my_CI3(0, .4, cl = .99)
+```
+
+#### 16) Without hardcoding any numbers in the code, find a 99% confidence interval for Ethnic Heterogeneity in the Angell dataset. Find the standard error by dividing the standard deviation by the square root of the sample size.
+
+```{r}
+# calculate the n and SE for angell data
+angell_n <- length(angell_stata$ethhet)
+angell_se <- sd(angell_stata$ethhet) / sqrt(angell_n)
+
+# apply the function
+my_CI3(mean(angell_stata$ethhet), 
+       angell_se,
+      cl = 0.99)
+```
+
+#### 17) Write a function that you can apply to the Angell dataset to get 95% confidence intervals. The function should take one argument: a vector. Use if-else statements to output NA and avoid error messages if the column in the data frame is not numeric or logical.
+
+```{r}
+angell_CI <- function(x) {
+
+  if (!is.numeric(x) && !is.logical(x)) {
+    return(NA)
+    
+  }
+  
+  else {
+    n <- length(x)
+    mean_x <- mean(x, na.rm = TRUE)
+    se <- sd(x, na.rm = TRUE) / sqrt(n)
+    z <- 1.96
+    up <- mean_x + z * se
+    lo <- mean_x - z * se
+
+    
+    return(c(lo = lo, up = up))
+    
+  }
+}
+
+# testing numeric column
+angell_CI(angell_stata$ethhet)
+
+# testing non-numeric column
+angell_CI(angell_stata$city)
+```
