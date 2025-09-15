@@ -2,7 +2,7 @@
 title: "Assignment 1"
 author: "Zupeng Zeng"
 subtitle: "Due at 11:59pm on September 16."
-format: html 
+format: pdf 
 editor: visual
 ---
 
