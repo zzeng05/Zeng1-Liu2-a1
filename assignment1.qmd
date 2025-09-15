@@ -55,15 +55,6 @@ head(angell_stata)
 ## Rename columns
 names(angell_txt) <- names(angell_stata)
 
-## Align classes
-angell_txt$city   <- as.character(angell_txt$city)
-angell_txt$morint <- as.numeric(angell_txt$morint)
-angell_txt$geomob <- as.numeric(angell_txt$geomob)
-angell_txt$region <- factor(
-  angell_txt$region,
-  levels = levels(haven::as_factor(angell_stata$region))  # "E","MW","W","S"
-)
-
 ## Cross check
 print(names(angell_stata))
 print(names(angell_txt))
@@ -200,7 +191,7 @@ my_CI3 <- function(pe, se, conf.level = 0.95) {
 
 ```{r}
 my_CI3(mean(angell_stata$ethhet), 
-       sd(angell_stata$ethhet) / sqrt(sum(angell_stata$ethhet))
+       sd(angell_stata$ethhet) / sqrt(length(angell_stata$ethhet))
        , conf.level = 0.99)
 ```
 

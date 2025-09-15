@@ -208,17 +208,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Rename columns</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(angell_txt) <span class="ot">&lt;-</span> <span class="fu">names</span>(angell_stata)</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Align classes</span></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>angell_txt<span class="sc">$</span>city   <span class="ot">&lt;-</span> <span class="fu">as.character</span>(angell_txt<span class="sc">$</span>city)</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>angell_txt<span class="sc">$</span>morint <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(angell_txt<span class="sc">$</span>morint)</span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>angell_txt<span class="sc">$</span>geomob <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(angell_txt<span class="sc">$</span>geomob)</span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>angell_txt<span class="sc">$</span>region <span class="ot">&lt;-</span> <span class="fu">factor</span>(</span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  angell_txt<span class="sc">$</span>region,</span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">levels =</span> <span class="fu">levels</span>(haven<span class="sc">::</span><span class="fu">as_factor</span>(angell_stata<span class="sc">$</span>region))  <span class="co"># "E","MW","W","S"</span></span>
-<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a><span class="do">## Cross check</span></span>
-<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">names</span>(angell_stata))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Cross check</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">names</span>(angell_stata))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "city"   "morint" "ethhet" "geomob" "region"</code></pre>
 </div>
@@ -254,8 +245,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "Component \"morint\": Mean relative difference: 2.311301e-08"
 [2] "Component \"ethhet\": Mean relative difference: 2.475718e-08"
-[3] "Component \"geomob\": Mean relative difference: 2.394829e-08"
-[4] "Component \"region\": 'current' is not a factor"             </code></pre>
+[3] "Component \"geomob\": Mean relative difference: 2.394829e-08"</code></pre>
 </div>
 </div>
 <p>6) Describe the Ethnic Heterogeneity variable. Use descriptive statistics such as mean, median, standard deviation, etc. How does it differ by region?</p>
@@ -521,11 +511,11 @@ df$group: crim &gt; 1
 <p>16) Without hardcoding any numbers in the code, find a 99% confidence interval for Ethnic Heterogeneity in the Angell dataset. Find the standard error by dividing the standard deviation by the square root of the sample size.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">my_CI3</span>(<span class="fu">mean</span>(angell_stata<span class="sc">$</span>ethhet), </span>
-<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">sd</span>(angell_stata<span class="sc">$</span>ethhet) <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="fu">sum</span>(angell_stata<span class="sc">$</span>ethhet))</span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">sd</span>(angell_stata<span class="sc">$</span>ethhet) <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="fu">length</span>(angell_stata<span class="sc">$</span>ethhet))</span>
 <span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>       , <span class="at">conf.level =</span> <span class="fl">0.99</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   lower    upper 
-29.94061 32.80357 </code></pre>
+23.35425 39.38993 </code></pre>
 </div>
 </div>
 <p>17) Write a function that you can <code>apply</code> to the Angell dataset to get 95% confidence intervals. The function should take one argument: a vector. Use if-else statements to output NA and avoid error messages if the column in the data frame is not numeric or logical.</p>
